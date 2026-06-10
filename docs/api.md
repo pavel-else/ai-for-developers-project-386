@@ -15,9 +15,9 @@
 
 ## Booker
 
-### GET /{slug}/event-types
+### GET /event-types
 
-Event type'ы пользователя.
+Системные шаблоны встреч (15 мин, 30 мин).
 
 ### GET /{slug}/slots?eventTypeId=
 
