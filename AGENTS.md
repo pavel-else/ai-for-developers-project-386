@@ -4,7 +4,7 @@
 
 ## Документация
 
-- `docs/entities.md` — сущности (User, EventType, Slot, Booking)
+- `docs/entities.md` — сущности (Owner, EventType, Slot, Booking)
 - `docs/api.md` — эндпоинты
 
 Оба файла — источник истины по архитектуре. Менять только через пользователя.
@@ -23,5 +23,4 @@
 
 - Сущности в `entities.md` описывают поля, а не типы
 - API в `api.md` — HTTP-роуты без привязки к конкретному фреймворку
-- Booking не ссылается на EventType, хранит `duration` (15 или 30)
 - Статусы Booking: `active`, `cancelled`

@@ -1,49 +1,86 @@
 # API
 
-## Host
+## Admin (владелец)
 
-### GET /slots
+### EventTypes
+
+#### GET /admin/event-types
+
+Список всех типов событий.
+
+#### POST /admin/event-types
+
+Создать тип события.
+
+- `name` — название
+- `description` — описание
+- `duration` — длительность в минутах
+
+#### PUT /admin/event-types/:id
+
+Обновить тип события.
+
+- `name` — название
+- `description` — описание
+- `duration` — длительность в минутах
+
+#### DELETE /admin/event-types/:id
+
+Удалить тип события.
+
+### Slots
+
+#### GET /admin/slots
 
 Список своих слотов с бронями.
 
-### POST /slots
+#### POST /admin/slots
 
 Создать новый слот.
 
 - `startTime` — начало
 - `endTime` — конец
 
-### DELETE /slots/:id
+#### DELETE /admin/slots/:id
 
 Удалить слот. Блокировано, если есть активные брони.
 
-### PATCH /bookings/:id/cancel
+### Bookings
 
-Отменить бронь в своём слоте.
+#### GET /admin/bookings
 
-## Booker
+Все предстоящие встречи (active, startTime ≥ сейчас), отсортированные по startTime. С данными EventType.
 
-### GET /event-types
+#### PATCH /admin/bookings/:id/cancel
 
-Системные шаблоны встреч (15 мин, 30 мин).
+Отменить бронь.
 
-### GET /{slug}/slots?duration=
+## Guest
+
+#### GET /event-types
+
+Список доступных типов событий.
+
+#### GET /{slug}/slots?duration=
 
 Свободные окна для указанной длительности.
+Возвращает только слоты в ближайшие 14 дней от текущей даты.
 
-### POST /bookings
+#### POST /bookings
 
 Создать бронь.
 
 - `slotId`
+- `eventTypeId`
 - `startTime` — начало встречи
 - `endTime` — конец встречи
-- `duration` — 15 или 30
+- `name` — имя гостя
+- `email` — email гостя
 
-### GET /bookings
+#### GET /bookings?email=
 
-Свои брони.
+Свои брони по email.
 
-### PATCH /bookings/:id/cancel
+#### PATCH /bookings/:id/cancel
 
-Отменить свою бронь.
+Отменить свою бронь. В теле: `{ email }`
