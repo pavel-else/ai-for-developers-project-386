@@ -2,7 +2,6 @@
   "openapi": "3.0.0",
   "info": {
     "title": "CalClone API",
-    "description": "CalClone — booking system API. Admin + Guest endpoints.",
     "version": "0.1.0"
   },
   "servers": [
@@ -14,7 +13,7 @@
   "paths": {
     "/admin/bookings": {
       "get": {
-        "operationId": "Bookings_list",
+        "operationId": "admin_Bookings_list",
         "description": "Все предстоящие встречи (active, startTime >= сейчас), отсортированные по startTime",
         "parameters": [],
         "responses": {
@@ -36,7 +35,7 @@
     },
     "/admin/bookings/{id}/cancel": {
       "patch": {
-        "operationId": "Bookings_cancel",
+        "operationId": "admin_Bookings_cancel",
         "description": "Отменить бронь",
         "parameters": [
           {
@@ -65,7 +64,7 @@
     },
     "/admin/event-types": {
       "get": {
-        "operationId": "EventTypes_list",
+        "operationId": "admin_EventTypes_list",
         "description": "Список всех типов событий",
         "parameters": [],
         "responses": {
@@ -85,7 +84,7 @@
         }
       },
       "post": {
-        "operationId": "EventTypes_create",
+        "operationId": "admin_EventTypes_create",
         "description": "Создать тип события",
         "parameters": [],
         "responses": {
@@ -114,7 +113,7 @@
     },
     "/admin/event-types/{id}": {
       "put": {
-        "operationId": "EventTypes_update",
+        "operationId": "admin_EventTypes_update",
         "description": "Обновить тип события",
         "parameters": [
           {
@@ -151,7 +150,7 @@
         }
       },
       "delete": {
-        "operationId": "EventTypes_delete",
+        "operationId": "admin_EventTypes_delete",
         "description": "Удалить тип события",
         "parameters": [
           {
@@ -173,7 +172,7 @@
     },
     "/admin/slots": {
       "get": {
-        "operationId": "Slots_list",
+        "operationId": "admin_Slots_list",
         "description": "Список своих слотов с бронями. Каждый слот содержит вложенные Booking[].",
         "parameters": [],
         "responses": {
@@ -193,7 +192,7 @@
         }
       },
       "post": {
-        "operationId": "Slots_create",
+        "operationId": "admin_Slots_create",
         "description": "Создать новый слот",
         "parameters": [],
         "responses": {
@@ -222,7 +221,7 @@
     },
     "/admin/slots/{id}": {
       "delete": {
-        "operationId": "Slots_delete",
+        "operationId": "admin_Slots_delete",
         "description": "Удалить слот. Блокировано, пока есть активные брони",
         "parameters": [
           {
@@ -244,7 +243,7 @@
     },
     "/bookings": {
       "post": {
-        "operationId": "Bookings_create",
+        "operationId": "guest_Bookings_create",
         "description": "  Создать бронь.\n  Проверка: на одно и то же время не может быть двух активных бронирований\n  (независимо от slotId и eventTypeId).",
         "parameters": [],
         "responses": {
@@ -271,7 +270,7 @@
         }
       },
       "get": {
-        "operationId": "Bookings_listByEmail",
+        "operationId": "guest_Bookings_listByEmail",
         "description": "Свои брони по email",
         "parameters": [
           {
@@ -303,7 +302,7 @@
     },
     "/bookings/{id}/cancel": {
       "patch": {
-        "operationId": "BookingCancel_cancel",
+        "operationId": "guest_BookingCancel_cancel",
         "description": "Отменить свою бронь. В теле передаётся email для верификации",
         "parameters": [
           {
@@ -340,7 +339,7 @@
     },
     "/event-types": {
       "get": {
-        "operationId": "EventTypes_list",
+        "operationId": "guest_EventTypes_list",
         "description": "Список доступных типов событий",
         "parameters": [],
         "responses": {
@@ -362,7 +361,7 @@
     },
     "/{slug}/slots": {
       "get": {
-        "operationId": "Slots_list",
+        "operationId": "guest_Slots_list",
         "description": "  Свободные окна для указанной длительности.\n  Возвращает только слоты в ближайшие 14 дней от текущей даты.",
         "parameters": [
           {
