@@ -79,6 +79,9 @@ model BookingCancel {
 
 // ===================== Admin API =====================
 
+@service(#{
+  title: "Admin API",
+})
 @doc("Административное API для владельца календаря")
 namespace Admin {
   @route("/admin/event-types")
@@ -121,6 +124,9 @@ namespace Admin {
 
 // ===================== Guest API =====================
 
+@service(#{
+  title: "Guest API",
+})
 @doc("Публичное API для гостей (без аутентификации)")
 namespace Guest {
   @route("/event-types")
