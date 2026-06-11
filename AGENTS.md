@@ -5,7 +5,7 @@
 ## Документация
 
 - `docs/entities.md` — сущности (Owner, EventType, Slot, Booking)
-- `docs/api.md` — эндпоинты
+- `docs/api.tsp` — API-контракт (TypeSpec)
 
 Оба файла — источник истины по архитектуре. Менять только через пользователя.
 
