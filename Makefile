@@ -1,31 +1,25 @@
-.PHONY: install openapi mock dev gen-api start all
+.PHONY: install openapi mock dev dev_backend dev_frontend gen-api start check all
 
 install:
 	npm --prefix docs install
 	npm --prefix frontend install
+	npm --prefix backend install
 
 docs/openapi.json: docs/api.tsp
 	npx --prefix docs tsp compile docs/api.tsp
-	node -e "
-		const a = require('./docs/openapi.Admin.json');
-		const g = require('./docs/openapi.Guest.json');
-		const m = {
-			openapi: '3.0.0',
-			info: { title: 'CalClone API', version: '0.1.0' },
-			servers: [{ url: 'http://localhost:4010' }],
-			tags: [],
-			paths: { ...a.paths, ...g.paths },
-			components: { schemas: { ...a.components.schemas, ...g.components.schemas } },
-		};
-		require('fs').writeFileSync('docs/openapi.json', JSON.stringify(m, null, 2));
-	"
+	node docs/merge-openapi.mjs
 
 openapi: docs/openapi.json
 
 mock: openapi
 	npx @stoplight/prism-cli mock docs/openapi.json --port 4010
 
-dev:
+dev: dev_frontend
+
+dev_backend:
+	npm --prefix backend run dev
+
+dev_frontend:
 	npm --prefix frontend run dev
 
 gen-api: openapi
@@ -33,8 +27,12 @@ gen-api: openapi
 
 start:
 	@trap 'kill 0' EXIT; \
+	npm --prefix backend run dev & \
 	npx @stoplight/prism-cli mock docs/openapi.json --port 4010 & \
 	npm --prefix frontend run dev
+
+check:
+	npm --prefix backend run typecheck
 
 all: install openapi gen-api
 	@echo "All set. Run 'make start' to launch the project."

@@ -13,7 +13,7 @@
   "paths": {
     "/admin/bookings": {
       "get": {
-        "operationId": "admin_Bookings_list",
+        "operationId": "Bookings_list",
         "description": "Все предстоящие встречи (active, startTime >= сейчас), отсортированные по startTime",
         "parameters": [],
         "responses": {
@@ -35,7 +35,7 @@
     },
     "/admin/bookings/{id}/cancel": {
       "patch": {
-        "operationId": "admin_Bookings_cancel",
+        "operationId": "Bookings_cancel",
         "description": "Отменить бронь",
         "parameters": [
           {
@@ -64,7 +64,7 @@
     },
     "/admin/event-types": {
       "get": {
-        "operationId": "admin_EventTypes_list",
+        "operationId": "EventTypes_list",
         "description": "Список всех типов событий",
         "parameters": [],
         "responses": {
@@ -84,7 +84,7 @@
         }
       },
       "post": {
-        "operationId": "admin_EventTypes_create",
+        "operationId": "EventTypes_create",
         "description": "Создать тип события",
         "parameters": [],
         "responses": {
@@ -113,7 +113,7 @@
     },
     "/admin/event-types/{id}": {
       "put": {
-        "operationId": "admin_EventTypes_update",
+        "operationId": "EventTypes_update",
         "description": "Обновить тип события",
         "parameters": [
           {
@@ -150,7 +150,7 @@
         }
       },
       "delete": {
-        "operationId": "admin_EventTypes_delete",
+        "operationId": "EventTypes_delete",
         "description": "Удалить тип события",
         "parameters": [
           {
@@ -172,7 +172,7 @@
     },
     "/admin/slots": {
       "get": {
-        "operationId": "admin_Slots_list",
+        "operationId": "Slots_list",
         "description": "Список своих слотов с бронями. Каждый слот содержит вложенные Booking[].",
         "parameters": [],
         "responses": {
@@ -192,7 +192,7 @@
         }
       },
       "post": {
-        "operationId": "admin_Slots_create",
+        "operationId": "Slots_create",
         "description": "Создать новый слот",
         "parameters": [],
         "responses": {
@@ -221,7 +221,7 @@
     },
     "/admin/slots/{id}": {
       "delete": {
-        "operationId": "admin_Slots_delete",
+        "operationId": "Slots_delete",
         "description": "Удалить слот. Блокировано, пока есть активные брони",
         "parameters": [
           {
@@ -243,7 +243,7 @@
     },
     "/bookings": {
       "post": {
-        "operationId": "guest_Bookings_create",
+        "operationId": "Bookings_create",
         "description": "  Создать бронь.\n  Проверка: на одно и то же время не может быть двух активных бронирований\n  (независимо от slotId и eventTypeId).",
         "parameters": [],
         "responses": {
@@ -270,7 +270,7 @@
         }
       },
       "get": {
-        "operationId": "guest_Bookings_listByEmail",
+        "operationId": "Bookings_listByEmail",
         "description": "Свои брони по email",
         "parameters": [
           {
@@ -302,7 +302,7 @@
     },
     "/bookings/{id}/cancel": {
       "patch": {
-        "operationId": "guest_BookingCancel_cancel",
+        "operationId": "BookingCancel_cancel",
         "description": "Отменить свою бронь. В теле передаётся email для верификации",
         "parameters": [
           {
@@ -331,7 +331,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {}
+              "schema": {
+                "$ref": "#/components/schemas/BookingCancelInput"
+              }
             }
           }
         }
@@ -339,7 +341,7 @@
     },
     "/event-types": {
       "get": {
-        "operationId": "guest_EventTypes_list",
+        "operationId": "EventTypes_list",
         "description": "Список доступных типов событий",
         "parameters": [],
         "responses": {
@@ -361,7 +363,7 @@
     },
     "/{slug}/slots": {
       "get": {
-        "operationId": "guest_Slots_list",
+        "operationId": "Slots_list",
         "description": "  Свободные окна для указанной длительности.\n  Возвращает только слоты в ближайшие 14 дней от текущей даты.",
         "parameters": [
           {
@@ -430,17 +432,23 @@
           },
           "startTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2026-07-01T10:00:00Z"
           },
           "endTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2026-07-01T10:15:00Z"
           },
           "bookerName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "example": "Иван Петров"
           },
           "bookerEmail": {
-            "type": "string"
+            "type": "string",
+            "format": "email",
+            "example": "ivan@example.com"
           },
           "status": {
             "$ref": "#/components/schemas/BookingStatus"
@@ -473,14 +481,21 @@
             "format": "uint32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "example": "15 минут"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "example": "Короткая встреча на 15 минут"
           },
           "duration": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 480,
+            "example": 30
           }
         }
       },
@@ -493,14 +508,21 @@
         ],
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "example": "45 минут"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "example": "Встреча на 45 минут"
           },
           "duration": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 480,
+            "example": 45
           }
         }
       },
@@ -513,14 +535,21 @@
         ],
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "example": "45 минут"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "example": "Встреча на 45 минут"
           },
           "duration": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 480,
+            "example": 45
           }
         }
       },
@@ -543,11 +572,13 @@
           },
           "startTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2026-07-01T09:00:00Z"
           },
           "endTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2026-07-01T18:00:00Z"
           }
         }
       },
@@ -560,11 +591,26 @@
         "properties": {
           "startTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2026-07-01T09:00:00Z"
           },
           "endTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2026-07-01T18:00:00Z"
+          }
+        }
+      },
+      "BookingCancelInput": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "ivan@example.com"
           }
         }
       },
@@ -589,17 +635,23 @@
           },
           "startTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2026-07-01T10:00:00Z"
           },
           "endTime": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2026-07-01T10:15:00Z"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "example": "Иван Петров"
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "format": "email",
+            "example": "ivan@example.com"
           }
         }
       }

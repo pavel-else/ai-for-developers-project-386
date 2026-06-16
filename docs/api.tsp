@@ -14,23 +14,46 @@ enum BookingStatus {
 
 model Owner {
   id: uint32;
+
+  @example("Владелец")
+  @minLength(1)
   name: string;
+
+  @example("owner")
+  @minLength(1)
   slug: string;
+
+  @example("owner@example.com")
+  @format("email")
   email: string;
 }
 
 model EventType {
   id: uint32;
   ownerId: uint32;
+
+  @example("15 минут")
+  @minLength(1)
   name: string;
+
+  @example("Короткая встреча на 15 минут")
+  @minLength(1)
   description: string;
+
+  @example(30)
+  @minValue(1)
+  @maxValue(480)
   duration: int32;
 }
 
 model Slot {
   id: uint32;
   ownerId: uint32;
+
+  @example(utcDateTime.fromISO("2026-07-01T09:00:00Z"))
   startTime: utcDateTime;
+
+  @example(utcDateTime.fromISO("2026-07-01T18:00:00Z"))
   endTime: utcDateTime;
 }
 
@@ -38,42 +61,86 @@ model Booking {
   id: uint32;
   slotId: uint32;
   eventTypeId: uint32;
+
+  @example(utcDateTime.fromISO("2026-07-01T10:00:00Z"))
   startTime: utcDateTime;
+
+  @example(utcDateTime.fromISO("2026-07-01T10:15:00Z"))
   endTime: utcDateTime;
+
+  @example("Иван Петров")
+  @minLength(1)
   bookerName: string;
+
+  @example("ivan@example.com")
+  @format("email")
   bookerEmail: string;
+
   status: BookingStatus;
 }
 
 // ===================== Request bodies =====================
 
 model EventTypeCreate {
+  @example("45 минут")
+  @minLength(1)
   name: string;
+
+  @example("Встреча на 45 минут")
+  @minLength(1)
   description: string;
+
+  @example(45)
+  @minValue(1)
+  @maxValue(480)
   duration: int32;
 }
 
 model EventTypeUpdate {
+  @example("45 минут")
+  @minLength(1)
   name: string;
+
+  @example("Встреча на 45 минут")
+  @minLength(1)
   description: string;
+
+  @example(45)
+  @minValue(1)
+  @maxValue(480)
   duration: int32;
 }
 
 model SlotCreate {
+  @example(utcDateTime.fromISO("2026-07-01T09:00:00Z"))
   startTime: utcDateTime;
+
+  @example(utcDateTime.fromISO("2026-07-01T18:00:00Z"))
   endTime: utcDateTime;
 }
 
 model BookingCreate {
   slotId: uint32;
   eventTypeId: uint32;
+
+  @example(utcDateTime.fromISO("2026-07-01T10:00:00Z"))
   startTime: utcDateTime;
+
+  @example(utcDateTime.fromISO("2026-07-01T10:15:00Z"))
   endTime: utcDateTime;
+
+  @example("Иван Петров")
+  @minLength(1)
   name: string;
+
+  @example("ivan@example.com")
+  @format("email")
   email: string;
 }
 
-model BookingCancel {
+model BookingCancelInput {
+  @example("ivan@example.com")
+  @format("email")
   email: string;
 }
 
@@ -160,6 +227,6 @@ namespace Guest {
   @route("/bookings/{id}/cancel")
   interface BookingCancel {
     @doc("Отменить свою бронь. В теле передаётся email для верификации")
-    @patch cancel(@path id: uint32, @body body: BookingCancel): Booking;
+    @patch cancel(@path id: uint32, @body body: BookingCancelInput): Booking;
   }
 }
