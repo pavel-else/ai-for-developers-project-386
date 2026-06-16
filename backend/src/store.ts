@@ -1,4 +1,4 @@
-import { NotFoundError, ConflictError } from "./errors.js";
+import { NotFoundError, ConflictError, BadRequestError } from "./errors.js";
 
 export type BookingStatus = "active" | "cancelled";
 
@@ -152,6 +152,10 @@ class Store {
   }
 
   createBooking(data: Omit<Booking, "id">): Booking {
+    const slot = this.getSlot(data.slotId);
+    if (data.startTime < slot.startTime || data.endTime > slot.endTime) {
+      throw new BadRequestError("Booking time must be within slot boundaries");
+    }
     this.checkOverlap(data.startTime, data.endTime);
     const booking: Booking = { id: this.nextBookingId++, ...data };
     this.bookings.set(booking.id, booking);
