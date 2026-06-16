@@ -144,8 +144,8 @@ async function remove(et: EventType) {
             <p class="text-xs text-muted-foreground">{{ et.duration }} min</p>
           </div>
           <div class="flex gap-2">
-            <Button variant="outline" size="icon-sm" @click="openEdit(et)">Edit</Button>
-            <Button variant="outline" size="icon-sm" @click="remove(et)">Delete</Button>
+            <Button variant="outline" size="sm" @click="openEdit(et)">Edit</Button>
+            <Button variant="outline" size="sm" @click="remove(et)">Delete</Button>
           </div>
         </CardContent>
       </Card>

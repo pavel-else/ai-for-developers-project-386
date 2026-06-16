@@ -68,7 +68,7 @@ async function cancel(b: Booking) {
           <Button
             v-if="b.status === 'active'"
             variant="outline"
-            size="icon-sm"
+            size="sm"
             @click="cancel(b)"
           >
             Cancel

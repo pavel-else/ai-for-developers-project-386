@@ -126,7 +126,7 @@ async function remove(slot: Slot) {
               {{ new Date(slot.startTime).toLocaleTimeString() }} – {{ new Date(slot.endTime).toLocaleTimeString() }}
             </p>
           </div>
-          <Button variant="outline" size="icon-sm" @click="remove(slot)">Delete</Button>
+          <Button variant="outline" size="sm" @click="remove(slot)">Delete</Button>
         </CardContent>
       </Card>
     </div>
