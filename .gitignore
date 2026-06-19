@@ -3,3 +3,6 @@ docs/node_modules/
 docs/package-lock.json
 docs/openapi.Admin.json
 docs/openapi.Guest.json
+e2e-report/
+test-results/
+playwright/.cache/

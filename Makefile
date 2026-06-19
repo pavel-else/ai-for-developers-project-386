@@ -1,4 +1,4 @@
-.PHONY: install openapi mock dev dev_backend dev_frontend gen-api start check all
+.PHONY: install openapi mock dev dev_backend dev_frontend gen-api start check test-e2e test-e2e-ui test-e2e-debug all
 
 install:
 	npm --prefix docs install
@@ -33,6 +33,15 @@ start:
 
 check:
 	npm --prefix backend run typecheck
+
+test-e2e:
+	npx playwright test
+
+test-e2e-ui:
+	npx playwright test --ui
+
+test-e2e-debug:
+	npx playwright test --debug
 
 all: install openapi gen-api
 	@echo "All set. Run 'make start' to launch the project."
