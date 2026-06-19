@@ -1,6 +1,6 @@
 # CalClone — AGENTS.md
 
-Проект на стадии дизайна. Кода нет. Всё решается с пользователем в диалоге.
+Проект в активной разработке. Код есть. Всё решается с пользователем в диалоге.
 
 ## Документация
 
@@ -9,10 +9,23 @@
 
 Оба файла — источник истины по архитектуре. Менять только через пользователя.
 
+## Тестирование
+
+- E2E-тесты в `e2e/` (Playwright, chromium headless)
+- API-запросы перехватываются через `page.route()` — реальный бэкенд не нужен
+- Запуск: `make test-e2e`, `make test-e2e-ui`, `make test-e2e-debug`
+- Хелперы: `e2e/helpers/api.ts` (route interception), `e2e/helpers/fixtures.ts` (мок-данные)
+
+## CI/CD (GitHub Actions)
+
+- `.github/workflows/e2e.yml` — E2E-тесты на push/PR в main
+- `.github/workflows/release-please.yml` — автоматические релизы (conventional commits → Release PR → GitHub Release)
+- Все workflow используют `GITHUB_TOKEN`, дополнительных секретов не требуют
+
 ## Процесс
 
 1. Сначала обсуждаем изменения с пользователем
-2. После утверждения — правим `docs/`, коммитим, пушим
+2. После утверждения — правим код/docs, коммитим, пушим
 
 ## Git
 
