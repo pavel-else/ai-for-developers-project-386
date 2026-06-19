@@ -2,6 +2,12 @@ import { Hono } from "hono";
 import { store } from "../store.js";
 import { NotFoundError, BadRequestError } from "../errors.js";
 
+interface AvailableSlot {
+  slotId: number;
+  startTime: string;
+  endTime: string;
+}
+
 export const slotsRouter = new Hono().get("/:slug/slots", (c) => {
   const slug = c.req.param("slug");
   const duration = Number(c.req.query("duration"));
@@ -17,29 +23,38 @@ export const slotsRouter = new Hono().get("/:slug/slots", (c) => {
   const from = now.toISOString();
   const to = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString();
 
+  const durationMs = duration * 60 * 1000;
   const slots = store.listSlotsInRange(from, to);
-  const available = slots.filter((s) => {
+  const available: AvailableSlot[] = [];
+
+  for (const s of slots) {
     const slotStart = new Date(s.startTime).getTime();
     const slotEnd = new Date(s.endTime).getTime();
-    const durationMs = duration * 60 * 1000;
 
     const activeBookings = s.bookings.filter((b) => b.status === "active");
 
-    if (activeBookings.length === 0) {
-      return slotEnd - slotStart >= durationMs;
+    const gaps =
+      activeBookings.length === 0
+        ? [{ start: slotStart, end: slotEnd }]
+        : findGaps(
+            slotStart,
+            slotEnd,
+            activeBookings.map((b) => ({
+              start: new Date(b.startTime).getTime(),
+              end: new Date(b.endTime).getTime(),
+            })),
+          );
+
+    for (const g of gaps) {
+      if (g.end - g.start >= durationMs) {
+        available.push({
+          slotId: s.id,
+          startTime: new Date(g.start).toISOString(),
+          endTime: new Date(g.start + durationMs).toISOString(),
+        });
+      }
     }
-
-    const gaps = findGaps(
-      slotStart,
-      slotEnd,
-      activeBookings.map((b) => ({
-        start: new Date(b.startTime).getTime(),
-        end: new Date(b.endTime).getTime(),
-      })),
-    );
-
-    return gaps.some((g) => g.end - g.start >= durationMs);
-  });
+  }
 
   return c.json(available);
 });

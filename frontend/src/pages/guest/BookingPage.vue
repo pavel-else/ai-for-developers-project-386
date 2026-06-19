@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getSlots, getEventTypes, createBooking } from '@/api/guest'
-import type { Slot, Booking, EventType } from '@/api/guest'
+import type { AvailableSlot, Booking, EventType } from '@/api/guest'
 import { config } from '@/api/config'
 import SlotPicker from '@/components/SlotPicker.vue'
 import BookingForm from '@/components/BookingForm.vue'
@@ -16,13 +16,15 @@ const eventTypeId = computed(() => Number(route.query.eventTypeId))
 const duration = computed(() => Number(route.query.duration))
 
 const eventType = ref<EventType | null>(null)
-const slots = ref<Slot[]>([])
+const slots = ref<AvailableSlot[]>([])
 const loading = ref(true)
-const selectedSlotId = ref<number | null>(null)
+const selectedIndex = ref<number | null>(null)
 const createdBooking = ref<Booking | null>(null)
 const error = ref('')
 
-const selectedSlot = computed(() => slots.value.find(s => s.id === selectedSlotId.value))
+const selectedSlot = computed(() =>
+  selectedIndex.value !== null ? slots.value[selectedIndex.value] ?? null : null,
+)
 
 onMounted(async () => {
   if (!eventTypeId.value || !duration.value) {
@@ -48,10 +50,10 @@ async function onFormSubmit(data: { name: string; email: string }) {
   try {
     error.value = ''
     createdBooking.value = await createBooking({
-      slotId: selectedSlot.value.id,
+      slotId: selectedSlot.value.slotId,
       eventTypeId: eventType.value.id,
       startTime: selectedSlot.value.startTime,
-      endTime: new Date(new Date(selectedSlot.value.startTime).getTime() + duration.value * 60 * 1000).toISOString(),
+      endTime: selectedSlot.value.endTime,
       name: data.name,
       email: data.email,
     })
@@ -102,8 +104,8 @@ async function onFormSubmit(data: { name: string; email: string }) {
       <h2 class="text-lg font-semibold mb-6">Select a time</h2>
       <SlotPicker
         :slots="slots"
-        :selected-slot-id="selectedSlotId"
-        @select="selectedSlotId = $event"
+        :selected-index="selectedIndex"
+        @select="selectedIndex = $event"
       />
 
       <div v-if="selectedSlot" class="mt-8">
