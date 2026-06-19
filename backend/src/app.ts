@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 import { AppError } from "./errors.js";
 import { seed } from "./seed.js";
@@ -12,6 +13,8 @@ import { bookingsRouter as guestBookingsRouter } from "./guest/bookings.js";
 seed();
 
 const app = new Hono();
+
+app.use("/*", cors());
 
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 

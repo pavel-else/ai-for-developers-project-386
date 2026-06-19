@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import {
-  getEventTypes, createEventType, updateEventType, deleteEventType,
-} from '@/api/admin'
+import { getEventTypes, createEventType, updateEventType, deleteEventType } from '@/api/admin'
 import type { EventType, EventTypeCreate, EventTypeUpdate } from '@/api/admin'
 import AdminNav from '@/components/AdminNav.vue'
 import { Button } from '@/components/ui/button'
@@ -62,7 +60,7 @@ async function save() {
   try {
     if (editing.value) {
       const updated = await updateEventType(editing.value.id, form.value as EventTypeUpdate)
-      eventTypes.value = eventTypes.value.map(et => et.id === updated.id ? updated : et)
+      eventTypes.value = eventTypes.value.map((et) => (et.id === updated.id ? updated : et))
     } else {
       const created = await createEventType(form.value as EventTypeCreate)
       eventTypes.value.push(created)
@@ -80,7 +78,7 @@ async function remove(et: EventType) {
   error.value = ''
   try {
     await deleteEventType(et.id)
-    eventTypes.value = eventTypes.value.filter(e => e.id !== et.id)
+    eventTypes.value = eventTypes.value.filter((e) => e.id !== et.id)
   } catch {
     error.value = 'Failed to delete event type.'
   }
@@ -113,7 +111,14 @@ async function remove(et: EventType) {
             </div>
             <div class="space-y-1">
               <Label for="et-duration">Duration (minutes)</Label>
-              <Input id="et-duration" v-model="form.duration" type="number" min="5" step="5" required />
+              <Input
+                id="et-duration"
+                v-model="form.duration"
+                type="number"
+                min="5"
+                step="5"
+                required
+              />
             </div>
             <p v-if="error" class="text-destructive text-sm">{{ error }}</p>
             <DialogFooter>
