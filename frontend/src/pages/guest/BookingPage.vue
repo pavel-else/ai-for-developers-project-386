@@ -51,7 +51,7 @@ async function onFormSubmit(data: { name: string; email: string }) {
       slotId: selectedSlot.value.id,
       eventTypeId: eventType.value.id,
       startTime: selectedSlot.value.startTime,
-      endTime: selectedSlot.value.endTime,
+      endTime: new Date(new Date(selectedSlot.value.startTime).getTime() + duration.value * 60 * 1000).toISOString(),
       name: data.name,
       email: data.email,
     })
