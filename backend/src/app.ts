@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { AppError } from "./errors.js";
 import { seed } from "./seed.js";
 import { eventTypesRouter as adminEventTypesRouter } from "./admin/event-types.js";
@@ -35,5 +36,8 @@ app.route("/admin/bookings", adminBookingsRouter);
 app.route("/event-types", guestEventTypesRouter);
 app.route("/", guestSlotsRouter);
 app.route("/bookings", guestBookingsRouter);
+
+app.get("*", serveStatic({ root: "../frontend/dist" }));
+app.get("*", serveStatic({ path: "../frontend/dist/index.html" }));
 
 export default app;

@@ -1,0 +1,12 @@
+node_modules/
+.git
+.gitignore
+*.md
+e2e/
+e2e-report/
+test-results/
+.env
+.env.local
+.env.*.local
+playwright.config.ts
+docker-compose*.yml

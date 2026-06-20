@@ -1,4 +1,4 @@
-.PHONY: install openapi mock dev dev_backend dev_frontend gen-api start check test-e2e test-e2e-ui test-e2e-debug all
+.PHONY: install openapi mock dev dev_backend dev_frontend gen-api start check test-e2e test-e2e-ui test-e2e-debug docker-build docker-run docker-stop all
 
 install:
 	npm --prefix docs install
@@ -42,6 +42,15 @@ test-e2e-ui:
 
 test-e2e-debug:
 	npx playwright test --debug
+
+docker-build:
+	docker build -t calcom .
+
+docker-run:
+	docker run -e PORT=3001 -p 3001:3001 calcom
+
+docker-stop:
+	docker stop calcom 2>/dev/null; true
 
 all: install openapi gen-api
 	@echo "All set. Run 'make start' to launch the project."
